@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<!--The comma-separated list of packages to scan for annotated components. -->
+
+
+	<!--bean class="org.springframework.report.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="webBindingInitializer"> <bean class="com.ailk.core.MyBindingInitializer"/> 
+		</property> </bean> -->
+
+
+	<!-- 支持上传文件 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value><![CDATA[text/plain;charset=GBK]]></value>
+						</list>
+					</property>
+				</bean>
+				 <!-- json用 -->
+				 <!-- 
+				<bean class = "org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">   
+	                <property name = "supportedMediaTypes" value="application/json"/>  
+	                <property name="objectMapper">
+	                	<bean class="com.ailk.viewface.common.utils.ObjectMapperCustomer"></bean>
+	                </property> 
+	             </bean>
+				  -->
+			</list>
+		</property>
+	</bean>
+	<!-- 
+	<context:component-scan base-package="com.ailk.womc.controller" />
+	 -->
+	<context:component-scan base-package="com.wodi.sdweb.*" />
+	
+	<!-- 
+	 -->
+	<bean id="sdViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" 
+			value="com.wodi.sdweb.utils.SdResourceView"/>
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+        <property name="order" value="0" />
+	</bean>
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="error" />
+		<property name="exceptionAttribute" value="exception" />
+		<property name="exceptionMappings">
+	       <props>
+	           <prop key="org.springframework.dao.TransientDataAccessResourceException">timeout</prop>
+               <prop key="java.sql.SQLException">errorDB</prop>
+               <prop key="java.lang.RuntimeException">500</prop>
+	       </props>
+		</property>
+	</bean>
+</beans>
